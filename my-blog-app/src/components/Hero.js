@@ -73,7 +73,7 @@ export default function Hero() {
           transition={{duration:0.8, delay:0.1, ease:"easeOut"}}
           viewport={{once:true}}
           className='max-w-[500px] max-h-[500px] w-full'>
-            <img src="/assets/man-using-laptop.png" alt="hero-bg" className='w-full h-full' />
+            <img src="/assets/man-using-laptop.webp" alt="hero-bg" className='w-full h-full' />
           </motion.div>
 
         </div>
