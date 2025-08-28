@@ -10,7 +10,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-xl font-semibold mb-2">Welcome back!</h2>
-          <p className="text-gray-600">Here's your dashboard overview.</p>
+          <p className="text-gray-600">&quot;Here&#39;s&quot; your dashboard overview.</p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-xl font-semibold mb-2">Recent Activity</h2>

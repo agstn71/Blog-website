@@ -144,7 +144,7 @@ const UpdateBlog = () => {
             <div className='max-w-6xl mx-auto mt-8'>
                 <Card className="w-full bg-white dark:bg-gray-800 p-5 space-y-2">
                     <h1 className=' text-4xl font-bold '>Basic Blog Information</h1>
-                    <p className=''>Make changes to your blogs here. Click publish when you're done.</p>
+                    <p className=''>Make changes to your blogs here. Click publish when &quot;you&#39;re&quot; done.</p>
                     <div className="space-x-2">
                         <Button onClick={() => togglePublishUnpublish(selectBlog.isPublished ? "false" : "true")}
                         >

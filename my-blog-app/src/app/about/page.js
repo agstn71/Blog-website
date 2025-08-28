@@ -32,7 +32,7 @@ const About = () => {
             <p className="text-lg mb-4">
               Welcome to our Blog App! We created this platform for readers,
               writers, and thinkers to connect through stories, tutorials, and
-              creative insights. Whether you're a passionate blogger or someone
+              creative insights. Whether &quot;you&#39;re&quot; a passionate blogger or someone
               who loves reading, this space is built for you.
             </p>
             <p className="text-lg mb-4">
@@ -49,7 +49,7 @@ const About = () => {
         {/* Footer Quote */}
         <div className="mt-16 text-center">
           <blockquote className="text-2xl italic text-gray-500">
-            "Words are powerful. Use them to inspire."
+            &quot;Words are powerful. Use them to inspire.&quot;
           </blockquote>
         </div>
       </div>

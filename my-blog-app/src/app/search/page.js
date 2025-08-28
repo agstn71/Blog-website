@@ -30,7 +30,7 @@ const SearchList = () => {
     {filteredBlogs && filteredBlogs.length > 0 ? (
       <div className='pt-32'>
         <div className='max-w-6xl mx-auto'>
-          <h2 className='mb-5'>Search Results for: "{query}"</h2>
+          <h2 className='mb-5'>Search Results for: &quot;{query}&quot;</h2>
           <div className='grid grid-cols-3 gap-7 my-10'>
             {filteredBlogs.map((blogItem, index) => (
               <BlogCard key={index} blog={blogItem} />
@@ -40,7 +40,7 @@ const SearchList = () => {
       </div>
     ) : (
       <div className='pt-32 text-center h-[600px] '>
-        <p className='text-2xl'>No results found for "{query}"</p>
+        <p className='text-2xl'>No results found for &quot;{query}&quot;</p>
         
         </div>
     )}
