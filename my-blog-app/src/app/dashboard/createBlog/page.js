@@ -28,12 +28,13 @@ export default function CreateBlog() {
   const dispatch = useDispatch();
   const router = useRouter();
   const { blog, loading } = useSelector((store) => store.blog);
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   const createBlogHandler = async () => {
     try {
       dispatch(setLoading(true));
       const res = await axios.post(
-        "http://localhost:8000/api/v1/blog/",
+        `${apiUrl}/api/v1/blog/`,
         { title, category },
         {
           headers: {

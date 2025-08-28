@@ -29,12 +29,12 @@ export default function YourBlog() {
     const router = useRouter()
     const dispatch = useDispatch()
     const { blog } = useSelector(store => store.blog)
-    console.log("redux store",blog);
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 
     const getOwnBlog = async () => {
         try {
-            const res = await axios.get(`http://localhost:8000/api/v1/blog/get-own-blogs`, { withCredentials: true })
+            const res = await axios.get(`${apiUrl}/api/v1/blog/get-own-blogs`, { withCredentials: true })
             if (res.data.success) {
                 dispatch(setBlog(res.data.blogs))
             }

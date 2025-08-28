@@ -4,8 +4,8 @@ import OtherArticleCardList from "./OtherArticleCardList";
 import BlogReduxUpdater from "./BlogReduxUpdater";
 
 export default async function RecentBlog() {
-  // Fetch blogs server-side
-  const res = await fetch("http://localhost:8000/api/v1/blog/get-published-blogs", { cache: "no-store", credentials: "include" });
+   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const res = await fetch(`${apiUrl}/api/v1/blog/get-published-blogs`, { cache: "no-store", credentials: "include" });
   const data = await res.json();
   const blogs = data.blogs || [];
 

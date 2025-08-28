@@ -26,7 +26,7 @@ export default function Signup() {
     email: "",
     password: "",
   });
-
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const handleChange = (e) => {
     
     const { name, value } = e.target;
@@ -43,7 +43,7 @@ export default function Signup() {
     try {
       dispatch(setLoading(true))
       const res = await axios.post(
-        "http://localhost:8000/api/v1/user/register",
+        `${apiUrl}/api/v1/user/register`,
         user,
         {
           headers: {

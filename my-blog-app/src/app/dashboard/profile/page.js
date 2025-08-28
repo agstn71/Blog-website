@@ -30,6 +30,7 @@ export default function Profile() {
   const { user, loading } = useSelector((store) => store.auth);
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const [input, setInput] = useState({
     firstName: user?.firstName,
     lastName: user?.lastName,
@@ -72,7 +73,7 @@ export default function Profile() {
     try {
       dispatch(setLoading(true));
       const res = await axios.put(
-        "http://localhost:8000/api/v1/user/profile/update",
+        `${apiUrl}/api/v1/user/profile/update`,
         formData,
         {
           headers: {

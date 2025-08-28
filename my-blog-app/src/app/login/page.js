@@ -18,6 +18,7 @@ import { toast } from "sonner";
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const {loading} = useSelector(store => store.auth)
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
  
   const router = useRouter();
   const dispatch = useDispatch();
@@ -40,7 +41,7 @@ const handleSubmit = async(e) => {
      
     try {
          dispatch(setLoading(true))
-         const res = await axios.post("http://localhost:8000/api/v1/user/login",input,{
+         const res = await axios.post(`${apiUrl}/api/v1/user/login`,input,{
             headers: {
                 "Content-Type":"application/json"
             },

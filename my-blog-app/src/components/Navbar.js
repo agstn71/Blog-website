@@ -44,6 +44,7 @@ export default function Navbar() {
 
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname()
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 
   const navLinks = [
@@ -66,7 +67,7 @@ export default function Navbar() {
   const logoutHandler = async (e) => {
     try {
 
-      const res = await axios.get("http://localhost:8000/api/v1/user/logout", { withCredentials: true })
+      const res = await axios.get(`${apiUrl}/api/v1/user/logout`, { withCredentials: true })
       if (res.data.success) {
         router.push("/")
         dispatch(setUser(null))

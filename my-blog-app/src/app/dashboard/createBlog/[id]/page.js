@@ -36,6 +36,7 @@ const UpdateBlog = () => {
     console.log("blog details",blog)
     const selectBlog = blog.find(blog => blog._id === id)
     const [content, setContent] = useState(selectBlog?.description);
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
    const [blogData, setBlogData] = useState({
   title: selectBlog?.title || "",
@@ -81,7 +82,7 @@ const UpdateBlog = () => {
 
     try {
         setLoading(true);
-        const res = await axios.put(`http://localhost:8000/api/v1/blog/${id}`, formData, {
+        const res = await axios.put(`${apiUrl}/api/v1/blog/${id}`, formData, {
             withCredentials: true, // keep this
         });
 

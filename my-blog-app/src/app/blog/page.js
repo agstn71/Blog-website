@@ -1,8 +1,8 @@
 import BlogList from "@/components/BlogList"  
-
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 async function getBlogs() {
   try {
-    const res = await fetch("http://localhost:8000/api/v1/blog/get-published-blogs", {
+    const res = await fetch(`${apiUrl}/api/v1/blog/get-published-blogs`, {
       cache: "no-store",
     })
 

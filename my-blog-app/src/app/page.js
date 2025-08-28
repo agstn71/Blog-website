@@ -9,9 +9,6 @@ export default function Home() {
  <div className="">
 
     
-  {/* Hero fixed completely */}
-  
-     {/* <div className="fixed inset-0 flex items-center justify-center"> */}
     <Hero />
   
  
