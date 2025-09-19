@@ -4,10 +4,30 @@ import OtherArticleCardList from "./OtherArticleCardList";
 import BlogReduxUpdater from "./BlogReduxUpdater";
 
 export default async function RecentBlog() {
-   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  const res = await fetch(`${apiUrl}/api/v1/blog/get-published-blogs`, { cache: "no-store", credentials: "include" });
-  const data = await res.json();
-  const blogs = data.blogs || [];
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  let blogs = [];
+
+  try {
+    const res = await fetch(`${apiUrl}/api/v1/blog/get-published-blogs`, {
+      cache: "no-store",
+      credentials: "include",
+    });
+
+    // Check if the response is OK (status 200-299)
+    if (!res.ok) {
+      console.error("Failed to fetch blogs:", res.status, res.statusText);
+    } else {
+      // Try parsing JSON safely
+      try {
+        const data = await res.json();
+        blogs = data.blogs || [];
+      } catch (jsonError) {
+        console.error("Failed to parse JSON:", jsonError);
+      }
+    }
+  } catch (fetchError) {
+    console.error("Error fetching blogs:", fetchError);
+  }
 
   return (
     <div className="bg-white pb-10">
@@ -18,10 +38,10 @@ export default async function RecentBlog() {
 
       <div className="max-w-7xl mx-auto">
         {/* Featured articles with animation (client-side) */}
-        <FeaturedArticleBlogCards blogs={blogs}  />
+        <FeaturedArticleBlogCards blogs={blogs} />
 
         {/* Other articles (can stay server component if no animation needed) */}
-        <OtherArticleCardList blogs={blogs}  />
+        <OtherArticleCardList blogs={blogs} />
       </div>
 
       {/* Redux updater can stay client-side */}
