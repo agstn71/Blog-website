@@ -11,14 +11,14 @@ function OtherArticleCardList({blogs}) {
   return date.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 };
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 mt-20 lg:gap-15">
+        <div className="grid grid-cols-1 lg:grid-cols-2 mt-10 md:mt-20 lg:gap-15">
              { blogs.slice(3,7).map((blog) => ( 
               <motion.div
                initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
               viewport={{ once: true, amount: 0.3 }}
-              key={blog?._id} className="overflow-hidden  hover:scale-101">
+              key={blog?._id} className="overflow-hidden  hover:scale-101  mb-10 md:mb-0">
             <div className="aspect-[16/9] ">
               <img
                 src={blog?.thumbnail}

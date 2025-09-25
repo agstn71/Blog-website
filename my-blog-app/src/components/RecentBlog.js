@@ -30,8 +30,8 @@ export default async function RecentBlog() {
   }
 
   return (
-    <div className="bg-white pb-10">
-      <div className="max-w-6xl mb:10 md:mb-20 mx-auto flex flex-col space-y-4 items-center">
+    <div className="bg-[#f5f5f5]  md:pb-10 px-4 md:px-0">
+      <div className="max-w-6xl mb:10 md:mb-20 mx-auto flex flex-col space-y-4 items-center pb-5 md:pb-0">
         <h1 className="text-4xl font-medium pt-10">Recent Blogs</h1>
         <hr className="w-24 text-center border-2 border-red-500 rounded-full" />
       </div>

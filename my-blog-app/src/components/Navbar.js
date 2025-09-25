@@ -63,7 +63,7 @@ export default function Navbar() {
     }
   }
 
-
+//Logout
   const logoutHandler = async (e) => {
     try {
 
@@ -95,14 +95,31 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+
+  const handleDeleteAccount = async() => {
+    if(!confirm("Are you sure do you want to delete your accout? This cannot be undone.")) {
+      return
+    }
+    try {
+     const res = await axios.delete(`${apiUrl}/api/v1/user/delete-account`,{
+        withCredentials:true
+      })
+      toast.success("Account deleted successfully")
+      dispatch(setUser(null))
+      router.push("/",{replace:true})
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to delete account")
+    }
+  }
+
   return (
     <div className={`py-4 fixed w-full z-50 transition-all duration-300 ${scrolled ? "bg-white dark:bg-gray-800 shadow-md" : "bg-transparent"}`}>
       <div className="max-w-7xl  mx-auto flex justify-between items-center px-4 md:px-0">
         {/* log section */}
-        <div className="flex gap-7 items-center">
+        <div className="flex gap-7 items-center w-[200px] ">
           <Link href="/">
             <div className="flex items-center">
-              <h1 className="font-bold text-3xl">BlogSphere</h1>
+              <img src="/assets/blog-sphere-logo.png" alt="logo-image"/>
             </div>
           </Link>
 
@@ -110,11 +127,12 @@ export default function Navbar() {
         </div>
 
         <div className="relative hidden lg:block">
-          <Input type="text" placeholder="What are you looking for?" className="w-[400px] border-gray-400 border-2"
+          <Input type="text" placeholder="What are you looking for?" className="w-[400px] border-black border-3"
             value={searchTerm}
+            
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <Button className="absolute right-0 top-0 " onClick={handleSearch}>
+          <Button className="absolute right-0 top-0 cursor-pointer" onClick={handleSearch}>
             <Search />
           </Button>
         </div>
@@ -125,8 +143,8 @@ export default function Navbar() {
               <Link key={link.href} href={link.href}>
                 <li
                   className={`transition-colors text-base tracking-wide ${pathname === link.href
-                      ? "text-emerald-600  font-semibold "
-                      : "text-gray-800  "
+                    ? "text-emerald-600  font-semibold "
+                    : "text-black "
                     }`}
                 >
                   {link.label}
@@ -145,20 +163,21 @@ export default function Navbar() {
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Avatar>
-                    <AvatarImage src={user.photoUrl || "https://github.com/shadcn.png"} />
-                    <AvatarFallback>CN</AvatarFallback>
+                  <Avatar className="cursor-pointer">
+                    <AvatarImage src={user.photoUrl} className="object-cover"/>
+                    <AvatarFallback>{user.firstName[0]}{user.lastName[0]}</AvatarFallback>
+
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="start">
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuGroup>
-                    <DropdownMenuItem onClick={() => router.push("/dashboard/profile ")}>
+                    <DropdownMenuItem  className="cursor-pointer" onClick={() => router.push("/dashboard/profile ")}>
                       <User />
                       Profile
                       <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => router.push("/dashboard/yourBlog ")}>
+                    <DropdownMenuItem className="cursor-pointer" onClick={() => router.push("/dashboard/yourBlog ")}>
                       <ChartColumn />
                       Your Blogs
                       <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
@@ -168,7 +187,7 @@ export default function Navbar() {
                         Comments
                         <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
                       </DropdownMenuItem> */}
-                    <DropdownMenuItem onClick={() => router.push("/dashboard/createBlog")}>
+                    <DropdownMenuItem className="cursor-pointer" onClick={() => router.push("/dashboard/createBlog")}>
                       <FaRegEdit />
                       Write Blog
                       <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
@@ -176,8 +195,8 @@ export default function Navbar() {
                   </DropdownMenuGroup>
 
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    Log out
+                  <DropdownMenuItem className="text-red-600" onClick={handleDeleteAccount}>
+                     Delete Account
                     <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -185,16 +204,16 @@ export default function Navbar() {
 
 
 
-              <Button className="hidden md:block" onClick={logoutHandler}>Logout</Button>
+              <Button className="hidden md:block cursor-pointer" onClick={logoutHandler}>Logout</Button>
 
             </div>
           ) : (
             <div className="ml-7 md:flex gap-2 ">
-              <Link href="/login">
-                <Button>Login</Button>
+              <Link href="/login" >
+                <Button className="cursor-pointer">Login</Button>
               </Link>
               <Link href="/signup" className="hidden md:block">
-                <Button>Signup</Button>
+                <Button className="cursor-pointer">Signup</Button>
               </Link>
             </div>
           )}

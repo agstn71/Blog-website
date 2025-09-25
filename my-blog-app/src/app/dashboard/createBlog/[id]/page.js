@@ -26,24 +26,24 @@ import { Loader2 } from 'lucide-react'
 
 const UpdateBlog = () => {
     const editor = useRef(null);
-   const router = useRouter()
+    const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [publish, setPublish] = useState(false)
     const params = useParams()
     const id = params.id
     const dispatch = useDispatch()
     const { blog } = useSelector(store => store.blog)
-    console.log("blog details",blog)
+    console.log("blog details", blog)
     const selectBlog = blog.find(blog => blog._id === id)
     const [content, setContent] = useState(selectBlog?.description);
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-   const [blogData, setBlogData] = useState({
-  title: selectBlog?.title || "",
-  subtitle: selectBlog?.subtitle || "",
-  description: content || "",
-  category: selectBlog?.category || "",
-});
+    const [blogData, setBlogData] = useState({
+        title: selectBlog?.title || "",
+        subtitle: selectBlog?.subtitle || "",
+        description: content || "",
+        category: selectBlog?.category || "",
+    });
 
     const [previewThumbnail, setPreviewThumbnail] = useState(selectBlog?.thumbnail);
 
@@ -69,44 +69,41 @@ const UpdateBlog = () => {
         }
     };
 
-   const updateBlogHandler = async () => {
-    const formData = new FormData();
-    formData.append("title", blogData.title);
-    formData.append("subtitle", blogData.subtitle);
-    formData.append("description", content);
-    formData.append("category", blogData.category);
+    const updateBlogHandler = async () => {
+        const formData = new FormData();
+        formData.append("title", blogData.title);
+        formData.append("subtitle", blogData.subtitle);
+        formData.append("description", content);
+        formData.append("category", blogData.category);
 
-    if (blogData.thumbnail instanceof File) {
-        formData.append("thumbnail", blogData.thumbnail);
-    }
-
-    try {
-        setLoading(true);
-        const res = await axios.put(`${apiUrl}/api/v1/blog/${id}`, formData, {
-            withCredentials: true, // keep this
-        });
-
-        if (res.data.success) {
-            toast.success(res.data.message);
-            console.log(res.data.blog);
+        if (blogData.thumbnail instanceof File) {
+            formData.append("thumbnail", blogData.thumbnail);
         }
-    } catch (error) {
-        console.log(error);
-        toast.error("Something went wrong");
-    } finally {
-        setLoading(false);
-    }
-};
+
+        try {
+            setLoading(true);
+            const res = await axios.put(`${apiUrl}/api/v1/blog/${id}`, formData, {
+                withCredentials: true, 
+            });
+
+            if (res.data.success) {
+                toast.success(res.data.message);
+                console.log(res.data.blog);
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error("Something went wrong");
+        } finally {
+            setLoading(false);
+        }
+    };
 
 
     const togglePublishUnpublish = async (action) => {
         console.log("action", action);
 
         try {
-            const res = await axios.patch(`http://localhost:8000/api/v1/blog/${id}`, {
-                // params: {
-                //     action
-                // },
+            const res = await axios.patch(`${apiUrl}/api/v1/blog/${id}`, {
                 withCredentials: true
             })
             if (res.data.success) {
@@ -124,7 +121,7 @@ const UpdateBlog = () => {
 
     const deleteBlog = async () => {
         try {
-            const res = await axios.delete(`http://localhost:8000/api/v1/blog/delete/${id}`, { withCredentials: true })
+            const res = await axios.delete(`${apiUrl}/api/v1/blog/delete/${id}`, { withCredentials: true })
             if (res.data.success) {
                 const updatedBlogData = blog.filter((blogItem) => blogItem?._id !== id);
                 dispatch(setBlog(updatedBlogData))
@@ -144,25 +141,35 @@ const UpdateBlog = () => {
         <div className='pb-10 px-3 pt-20 '>
             <div className='max-w-6xl mx-auto mt-8'>
                 <Card className="w-full bg-white dark:bg-gray-800 p-5 space-y-2">
-                    <h1 className=' text-4xl font-bold '>Basic Blog Information</h1>
-                    <p className=''>Make changes to your blogs here. Click publish when &quot;you&#39;re&quot; done.</p>
+                    <h1 className='text-4xl font-bold'>Edit Your Blog</h1>
+                    <p className='text-gray-600 '>
+                        Update your blog details here. Edit the title, description, or thumbnail, and select the appropriate category. Click “Publish” when your changes are ready to go live.
+                    </p>
+
                     <div className="space-x-2">
                         <Button onClick={() => togglePublishUnpublish(selectBlog.isPublished ? "false" : "true")}
                         >
                             {selectBlog?.isPublished ? "UnPublish" : "Publish"}
                         </Button>
                         <Button variant="destructive" onClick={deleteBlog}>Remove</Button>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">
+                            Publishing will make this blog visible on your website. Removing will delete it permanently.
+                        </p>
+
                     </div>
                     <div className='pt-10'>
-                        <Label>Title</Label>
+                        <Label className="mb-2">Title</Label>
                         <Input type="text" placeholder="Enter a title" name="title" value={blogData.title} onChange={handleChange} className="dark:border-gray-300" />
                     </div>
                     <div>
-                        <Label>Subtitle</Label>
-                        <Input type="text" placeholder="Enter a subtitle" name="subtitle" value={blogData.subtitle} onChange={handleChange} className="dark:border-gray-300" />
+                        <Label className="mb-2">Subtitle</Label>
+                        <Input type="text" placeholder="Write a short subtitle to summarize your blog" name="subtitle" value={blogData.subtitle} onChange={handleChange} className="dark:border-gray-300" />
                     </div>
                     <div>
                         <Label>Description</Label>
+                        <p className="text-gray-500 dark:text-gray-400 text-sm mb-2">
+                            Add detailed content for your blog here. Use headings, lists, and images to structure your post.
+                        </p>
                         <JoditEditor
                             ref={editor}
                             value={blogData.description}
@@ -172,25 +179,30 @@ const UpdateBlog = () => {
                         />
                     </div>
                     <div>
-                        <Label>Category</Label>
-                        <Select onValueChange={selectCategory} className="dark:border-gray-300">
-                            <SelectTrigger className="w-[180px]">
-                                <SelectValue placeholder="Select a category" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>Category</SelectLabel>
-                                    <SelectItem value="Web Development">Web Development</SelectItem>
-                                    <SelectItem value="Digital Marketing">Digital Marketing</SelectItem>
-                                    <SelectItem value="Blogging">Blogging</SelectItem>
-                                    <SelectItem value="Photgraphy">Photgraphy</SelectItem>
-                                    <SelectItem value="Cooking">Cooking</SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
+                        <Label className="mb-2">Category</Label>
+                       <Select onValueChange={selectCategory} required>
+                        <SelectTrigger className="w-[200px]">
+                          <SelectValue placeholder="Select a Category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Tech Categories</SelectLabel>
+                            <SelectItem value="Web Development">Web Development</SelectItem>
+                            <SelectItem value="Mobile Development">Mobile Development</SelectItem>
+                            <SelectItem value="Programming Languages">Programming Languages</SelectItem>
+                            <SelectItem value="AI & Machine Learning">AI & Machine Learning</SelectItem>
+                            <SelectItem value="Cloud & DevOps">Cloud & DevOps</SelectItem>
+                            <SelectItem value="Databases">Databases</SelectItem>
+                            <SelectItem value="Cybersecurity">Cybersecurity</SelectItem>
+                            <SelectItem value="Tools & Productivity">Tools & Productivity</SelectItem>
+                            <SelectItem value="Tech News & Industry">Tech News & Industry</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
                     </div>
+                    
                     <div>
-                        <Label>Thumbnail</Label>
+                        <Label className="mb-2">Thumbnail</Label>
                         <Input
                             id="file"
                             type="file"
@@ -207,10 +219,10 @@ const UpdateBlog = () => {
                         )}
                     </div>
                     <div className='flex gap-3'>
-                        <Button variant="outline" onClick={()=>router.back()}>Back</Button>
+                        <Button variant="outline" onClick={() => router.back()}>Back</Button>
                         <Button onClick={updateBlogHandler}>
                             {
-                                loading ?<> <Loader2 className="mr-2 w-4 h-4 animate-spin"/>Please Wait</>  : "Save"
+                                loading ? <> <Loader2 className="mr-2 w-4 h-4 animate-spin" />Please Wait</> : "Save"
                             }
                         </Button>
                     </div>

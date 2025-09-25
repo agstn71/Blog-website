@@ -43,6 +43,13 @@ export default function Profile() {
     file: user?.photoUrl,
   });
 
+  const socialLinks = [
+  { name: "facebook", icon: FaFacebook },
+  { name: "linkedin", icon: FaLinkedin },
+  { name: "github", icon: FaGithub },
+  { name: "instagram", icon: FaInstagram },
+];
+
   const changeEventHandler = (e) => {
     const { name, value } = e.target;
     setInput((prev) => ({
@@ -66,7 +73,7 @@ export default function Profile() {
     formData.append("linkedin", input.linkedin);
     formData.append("instagram", input.instagram);
     formData.append("github", input.github);
-    if (input?.file) {
+    if (input?.file && input.file instanceof File) {
       formData.append("thumbnail", input?.file);
     }
 
@@ -89,7 +96,7 @@ export default function Profile() {
         dispatch(setUser(res.data.user));
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error.response.data.message || "Failed to update your profile.");
     } finally {
       dispatch(setLoading(false));
     }
@@ -101,25 +108,28 @@ export default function Profile() {
           {/* image section */}
           <div className="flex flex-col items-center justify-center md:w-[400px]">
             <Avatar className="w-40 h-40 border-2">
-              <AvatarImage
+              <AvatarImage className="object-cover"
                 src={user?.photoUrl || "/assets/user.jpg"}
               ></AvatarImage>
             </Avatar>
             
-            <div className="flex gap-4 items-center mt-4">
-              <Link href="/">
-                <FaFacebook className="w-6 h-6 text-gray-800 dark:text-gray-300 " />
-              </Link>
-              <Link href="/">
-                <FaLinkedin className="w-6 h-6 text-gray-800 dark:text-gray-300 " />
-              </Link>
-              <Link href="/">
-                <FaGithub className="w-6 h-6 text-gray-800 dark:text-gray-300 " />
-              </Link>
-              <Link href="/">
-                <FaInstagram className="w-6 h-6 text-gray-800 dark:text-gray-300 " />
-              </Link>
-            </div>
+           <div className="flex gap-4 items-center mt-4">
+  {socialLinks.map(({ name, icon: Icon }) => (
+    <Icon
+      key={name}
+      className={`w-6 h-6 cursor-pointer ${
+        user?.[name] ? "text-gray-800 dark:text-gray-300" : "text-gray-400"
+      }`}
+      onClick={() => {
+        if (user?.[name]) {
+          window.open(user[name], "_blank");
+        } else {
+          setOpen(true);
+        }
+      }}
+    />
+  ))}
+</div>
           </div>
 
           {/* info section */}
@@ -132,9 +142,13 @@ export default function Profile() {
             </p>
             <div className="flex flex-col gap-2 items-start justify-start my-5">
               <Label>About Me</Label>
-              <p className="border dark:border-gray-600 p-6 rounded-lg">
+              <p className="border p-6 rounded-lg">
                 {user?.bio ||
-                  "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repudiandae dolores quisquam atque nemo? Nam, dolores? Distinctio, repellat fugiat eveniet adipisci ipsa corrupti incidunt, nemo iure consequuntur ipsum a maxime illo."}
+                  (
+    <span className="text-gray-400 dark:text-gray-500" onClick={() => setOpen(true)}>
+      Add a bio to let others know more about you.
+    </span>
+  )}
               </p>
             </div>
 
@@ -258,10 +272,10 @@ export default function Profile() {
                   </div>
                   <DialogFooter>
                     <DialogClose asChild>
-                      <Button variant="outline">Cancel</Button>
+                      <Button variant="outline" className="cursor-pointer">Cancel</Button>
                     </DialogClose>
 
-                    <Button type="submit" onClick={submitHandler}>
+                    <Button type="submit" className="cursor-pointer" onClick={submitHandler}>
                      
                       {
                  loading?<>

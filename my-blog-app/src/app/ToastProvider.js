@@ -5,6 +5,6 @@ import { Toaster } from "sonner";
 
 export default function ToastProvider() {
     return (
-       <Toaster></Toaster>
+       <Toaster position="top-right" duration={3000}></Toaster>
     )
 }

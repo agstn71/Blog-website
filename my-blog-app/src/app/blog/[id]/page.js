@@ -73,15 +73,15 @@ export default function BlogView() {
                     <div className="flex items-center justify-between flex-wrap gap-4">
                         <div className="flex items-center space-x-4">
                             <Avatar>
-                                <AvatarImage src={selectedBlog.author.photoUrl} alt="Author" />
+                                <AvatarImage src={selectedBlog?.author?.photoUrl} alt="Author" />
                                 <AvatarFallback>JD</AvatarFallback>
                             </Avatar>
                             <div>
-                                <p className="font-medium">{selectedBlog.author.firstName} {selectedBlog.author.lastName}</p>
-                                <p className="text-sm text-muted-foreground">{selectedBlog.author.occupation}</p>
+                                <p className="font-medium">{selectedBlog?.author?.firstName} {selectedBlog?.author?.lastName}</p>
+                                <p className="text-sm text-muted-foreground">{selectedBlog?.author?.occupation}</p>
                             </div>
                         </div>
-                        <div className="text-sm text-muted-foreground">Published on {changeTimeFormat(selectedBlog.createdAt)} </div>
+                        <div className="text-sm text-muted-foreground">Published on {changeTimeFormat(selectedBlog?.createdAt)} </div>
                     </div>
                 </div>
 
@@ -94,10 +94,10 @@ export default function BlogView() {
                         height={500}
                         className="w-full object-cover"
                     />
-                    <p className="text-sm text-muted-foreground mt-2 italic">{selectedBlog.subtitle}</p>
+                    <p className="text-sm text-muted-foreground mt-2 italic">{selectedBlog?.subtitle}</p>
                 </div>
 
-                <p className='' dangerouslySetInnerHTML={{ __html: selectedBlog.description }} />
+                <p className='' dangerouslySetInnerHTML={{ __html: selectedBlog?.description }} />
 
                 <div className='mt-10'>
                     {/* Tags */}

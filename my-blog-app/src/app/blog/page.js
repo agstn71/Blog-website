@@ -20,7 +20,7 @@ const Blog = async () => {
   const blogs = await getBlogs()
 
   return (
-    <div className="pt-16 bg-white">
+    <div className="pt-16 bg-[#f5f5f5]">
       <div className="max-w-6xl mx-auto text-center flex flex-col space-y-4 items-center">
         <h1 className="text-4xl font-medium text-center pt-10">Insights & Stories</h1>
         <hr className="w-24 text-center border-2 border-red-500 rounded-full" />

@@ -30,7 +30,11 @@ export default function CreateBlog() {
   const { blog, loading } = useSelector((store) => store.blog);
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-  const createBlogHandler = async () => {
+  const createBlogHandler = async (e) => {
+   if (!title.trim() || !category) {
+    toast.error("Please fill all fields");
+    return;
+  }
     try {
       dispatch(setLoading(true));
       const res = await axios.post(
@@ -77,47 +81,50 @@ export default function CreateBlog() {
       <Card className="md:p-10 p-4 dark:bg-gray-800 -space-y-6">
         <h1 className="text-2xl font-bold">Let,s create blog</h1>
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. A enim,
-          numquam impedit quibusdam saepe vitae quasi excepturi earum
-          consectetur ullam ab temporibus optio distinctio quas odit odio rerum
-          animi fugiat?
+         Create a new blog post by giving it a title, choosing a category, and writing your content. Share your tech insights with others!
         </p>
         <div className="mt-10">
-          <div>
-            <Label>Title</Label>
+          <form onSubmit={(e) => {
+            e.preventDefault()
+            createBlogHandler()
+          }}>
+               <div>
+            <Label className="mb-2">Title</Label>
             <Input
               type="text"
-              placeholder="Your blog name"
+              placeholder="Enter your blog title here"
               className="bg-white dark:bg-gray-700"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              required
             />
           </div>
 
           <div className="mt-4 mb-5">
-            <Label className="mb-1">Category</Label>
-            <Select onValueChange={getSelectedCategory}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select a Category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Category</SelectLabel>
-                  <SelectItem value="Web Development">
-                    Web Development
-                  </SelectItem>
-                  <SelectItem value="Digital Marketing">
-                    Digital Marketing
-                  </SelectItem>
-                  <SelectItem value="Blogging">Blogging</SelectItem>
-                  <SelectItem value="Photography">Photography</SelectItem>
-                  <SelectItem value="Cooking">Cooking</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
+  <Label className="mb-1">Category</Label>
+  <Select onValueChange={getSelectedCategory} required>
+    <SelectTrigger className="w-[200px]">
+      <SelectValue placeholder="Select a Category" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectGroup>
+        <SelectLabel>Tech Categories</SelectLabel>
+        <SelectItem value="Web Development">Web Development</SelectItem>
+        <SelectItem value="Mobile Development">Mobile Development</SelectItem>
+        <SelectItem value="Programming Languages">Programming Languages</SelectItem>
+        <SelectItem value="AI & Machine Learning">AI & Machine Learning</SelectItem>
+        <SelectItem value="Cloud & DevOps">Cloud & DevOps</SelectItem>
+        <SelectItem value="Databases">Databases</SelectItem>
+        <SelectItem value="Cybersecurity">Cybersecurity</SelectItem>
+        <SelectItem value="Tools & Productivity">Tools & Productivity</SelectItem>
+        <SelectItem value="Tech News & Industry">Tech News & Industry</SelectItem>
+      </SelectGroup>
+    </SelectContent>
+  </Select>
+</div>
+
           <div className="flex gap-2">
-            <Button onClick={createBlogHandler} disabled={loading}>
+            <Button type="submit" disabled={loading}>
               {loading ? (
                 <>
                   <Loader2 className="mr-1 h-4 w-4 animate-spin" /> Please wait
@@ -127,6 +134,8 @@ export default function CreateBlog() {
               )}
             </Button>
           </div>
+          </form>
+         
         </div>
       </Card>
     </div>

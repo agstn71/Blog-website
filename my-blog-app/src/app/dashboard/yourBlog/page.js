@@ -20,15 +20,16 @@ import { toast } from 'sonner'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { useRouter } from 'next/navigation'
-import { setBlog } from '@/redux/blogSlice'
+import { setBlog, setUserBlog } from '@/redux/blogSlice'
+import { Button } from '@/components/ui/button'
 
 // const invoices = [
 
 export default function YourBlog() {
-    
+
     const router = useRouter()
     const dispatch = useDispatch()
-    const { blog } = useSelector(store => store.blog)
+    const { userBlog } = useSelector(store => store.blog)
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 
@@ -36,10 +37,10 @@ export default function YourBlog() {
         try {
             const res = await axios.get(`${apiUrl}/api/v1/blog/get-own-blogs`, { withCredentials: true })
             if (res.data.success) {
-                dispatch(setBlog(res.data.blogs))
+                dispatch(setUserBlog(res.data.blogs))
             }
-            console.log("blog data",res.data.blogs)
-            console.log(" after fetch api redux store",blog);
+            console.log("blog data", res.data.blogs)
+            console.log(" after fetch api redux store", blog);
 
         } catch (error) {
             console.log(error);
@@ -48,7 +49,7 @@ export default function YourBlog() {
     }
     const deleteBlog = async (id) => {
         try {
-            const res = await axios.delete(`http://localhost:8000/api/v1/blog/delete/${id}`, { withCredentials: true })
+            const res = await axios.delete(`${apiUrl}/api/v1/blog/delete/${id}`, { withCredentials: true })
             if (res.data.success) {
                 const updatedBlogData = blog.filter((blogItem) => blogItem?._id !== id);
                 dispatch(setBlog(updatedBlogData))
@@ -68,7 +69,7 @@ export default function YourBlog() {
 
 
     const formatDate = (index) => {
-        const date = new Date(blog[index].createdAt)
+        const date = new Date(userBlog[index].createdAt)
         const formattedDate = date.toLocaleDateString("en-GB");
         return formattedDate
         // console.log("formattedDate", date);
@@ -76,54 +77,67 @@ export default function YourBlog() {
     }
 
     return (
-          <div className='pb-10 pt-20  h-screen'>
+        <div className='pb-10 pt-20  h-screen'>
             <div className='max-w-6xl mx-auto mt-8 '>
                 <Card className="w-full p-5 space-y-2 dark:bg-gray-800">
 
-                    <Table>
-                        <TableCaption>A list of your recent blogs.</TableCaption>
-                        <TableHeader className="overflow-x-auto" >
-                            <TableRow>
-                                {/* <TableHead className="w-[100px]">Author</TableHead> */}
-                                <TableHead>Title</TableHead>
-                                <TableHead>Category</TableHead>
-                                <TableHead>Date</TableHead>
-                                <TableHead className="text-center">Action</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody className="overflow-x-auto ">
-                            {blog?.map((item, index) => (
-                                <TableRow key={index}>
-                                    {/* <TableCell className="font-medium">{item.author.firstName}</TableCell> */}
-                                    <TableCell className="flex gap-4 items-center">
-                                        <img src={item.thumbnail} alt="" className='w-20 rounded-md hidden md:block' />
-                                        <h1 className='hover:underline cursor-pointer w-[60px] md:w-full truncate' onClick={() => router.push(`/blog/${item._id}`)}>{item.title}</h1>
-                                    </TableCell>
-                                    <TableCell>{item.category}</TableCell>
-                                    <TableCell className="">{formatDate(index)}</TableCell>
-                                    <TableCell className="text-center">
-                                        {/* <Eye className='cursor-pointer' onClick={() => router.push(`/blogs/${item._id}`)} />
+                    {
+                        userBlog?.length > 0 ? <Table>
+                            <TableCaption>A list of your recent blogs.</TableCaption>
+                            <TableHeader className="overflow-x-auto" >
+                                <TableRow>
+                                    {/* <TableHead className="w-[100px]">Author</TableHead> */}
+                                    <TableHead>Title</TableHead>
+                                    <TableHead>Category</TableHead>
+                                    <TableHead>Date</TableHead>
+                                    <TableHead className="text-center">Action</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody className="overflow-x-auto ">
+                                {userBlog?.map((item, index) => (
+                                    <TableRow key={index}>
+                                        {/* <TableCell className="font-medium">{item.author.firstName}</TableCell> */}
+                                        <TableCell className="flex gap-4 items-center">
+                                            <img src={item.thumbnail} alt="" className='w-20 rounded-md hidden md:block' />
+                                            <h1 className='hover:underline cursor-pointer w-[60px] md:w-full truncate' onClick={() => router.push(`/blog/${item._id}`)}>{item.title}</h1>
+                                        </TableCell>
+                                        <TableCell>{item.category}</TableCell>
+                                        <TableCell className="">{formatDate(index)}</TableCell>
+                                        <TableCell className="text-center">
+                                            {/* <Eye className='cursor-pointer' onClick={() => router.push(`/blogs/${item._id}`)} />
                                         <Edit className='cursor-pointer' onClick={() => router.push(`/dashboard/write-blog/${item._id}`)} />
                                         <Trash2 className='cursor-pointer' onClick={() => deleteBlog(item._id)} /> */}
-                                        
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger><BsThreeDotsVertical/></DropdownMenuTrigger>
-                                            <DropdownMenuContent className="w-[180px]">
-                                                <DropdownMenuItem onClick={() => router.push(`/dashboard/createBlog/${item._id}`)}><Edit />Edit</DropdownMenuItem>
-                                                <DropdownMenuItem className="text-red-500" onClick={() => deleteBlog(item._id)}><Trash2 />Delete</DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                        {/* <TableFooter>
+
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger><BsThreeDotsVertical /></DropdownMenuTrigger>
+                                                <DropdownMenuContent className="w-[180px]">
+                                                    <DropdownMenuItem onClick={() => router.push(`/dashboard/createBlog/${item._id}`)}><Edit />Edit</DropdownMenuItem>
+                                                    <DropdownMenuItem className="text-red-500" onClick={() => deleteBlog(item._id)}><Trash2 />Delete</DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                            {/* <TableFooter>
                             <TableRow>
                                 <TableCell colSpan={3}>Total</TableCell>
                                 <TableCell className="text-right">$2,500.00</TableCell>
                             </TableRow>
                         </TableFooter> */}
-                    </Table>
+                        </Table> :
+                            <div className="flex flex-col items-center justify-center py-10 text-center border rounded-lg">
+
+                                <h2 className="text-lg font-medium">No blogs yet</h2>
+                                <p className="text-gray-500">Start writing your first blog and share your thoughts with the world.</p>
+                                <Button className="mt-4" onClick={() => router.push("/dashboard/createBlog")}>
+                                    Create Blog
+                                </Button>
+
+                            </div>
+                    }
+
+
 
                 </Card>
             </div>

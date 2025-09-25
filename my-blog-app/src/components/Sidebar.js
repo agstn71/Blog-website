@@ -8,7 +8,7 @@ import { FaRegEdit } from "react-icons/fa";
 export default function Sidebar() {
   const pathname = usePathname();
   return (
-    <div className="hidden mt-10 md:block border-r-2 dark:bg-gray-800 bg-white border-gray-300 dark:border-gray-600 w-[300px] p-10 space-y-2 h-screen ">
+    <div className="hidden mt-10 md:block border-r-2 dark:bg-gray-800 bg-white border-gray-300 dark:border-gray-600 w-[300px] p-10 space-y-2 h-screen rounded-r-2xl">
       <div className="text-center pt-10 px-3 space-y-2">
         <Link
           href="/dashboard/profile"

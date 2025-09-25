@@ -11,7 +11,7 @@ const changeTimeFormat = (isoDate) => {
 };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[75%_25%] gap-15">
+    <div className="grid grid-cols-1 lg:grid-cols-[75%_25%] md:gap-15 gap-5">
       {/* column 1 */}
       <motion.div
         initial={{ opacity: 0, y: 50 }}
