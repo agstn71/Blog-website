@@ -101,12 +101,12 @@ export default function BlogView() {
 
                 <div className='mt-10'>
                     {/* Tags */}
-                    <div className="flex flex-wrap gap-2 mb-8">
+                    {/* <div className="flex flex-wrap gap-2 mb-8">
                         <Badge variant="secondary">Next.js</Badge>
                         <Badge variant="secondary">React</Badge>
                         <Badge variant="secondary">Web Development</Badge>
                         <Badge variant="secondary">JavaScript</Badge>
-                    </div>
+                    </div> */}
 
                     {/* Engagement */}
                     

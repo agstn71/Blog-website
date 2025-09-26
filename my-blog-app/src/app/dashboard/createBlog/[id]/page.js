@@ -28,7 +28,6 @@ const UpdateBlog = () => {
     const editor = useRef(null);
     const router = useRouter()
     const [loading, setLoading] = useState(false)
-    const [publish, setPublish] = useState(false)
     const params = useParams()
     const id = params.id
     const dispatch = useDispatch()
@@ -37,6 +36,8 @@ const UpdateBlog = () => {
     const selectBlog = blog.find(blog => blog._id === id)
     const [content, setContent] = useState(selectBlog?.description);
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    const [publish, setPublish] = useState(selectBlog?.isPublished || false);
+
 
     const [blogData, setBlogData] = useState({
         title: selectBlog?.title || "",
@@ -83,7 +84,7 @@ const UpdateBlog = () => {
         try {
             setLoading(true);
             const res = await axios.put(`${apiUrl}/api/v1/blog/${id}`, formData, {
-                withCredentials: true, 
+                withCredentials: true,
             });
 
             if (res.data.success) {
@@ -103,7 +104,8 @@ const UpdateBlog = () => {
         console.log("action", action);
 
         try {
-            const res = await axios.patch(`${apiUrl}/api/v1/blog/${id}`, {
+            const res = await axios.patch(`${apiUrl}/api/v1/blog/${id}`, {}, {
+                params: { publish: action },
                 withCredentials: true
             })
             if (res.data.success) {
@@ -146,17 +148,17 @@ const UpdateBlog = () => {
                         Update your blog details here. Edit the title, description, or thumbnail, and select the appropriate category. Click “Publish” when your changes are ready to go live.
                     </p>
 
-                    <div className="space-x-2">
-                        <Button onClick={() => togglePublishUnpublish(selectBlog.isPublished ? "false" : "true")}
-                        >
+                    {/* <div className="space-x-2">
+                        <Button onClick={() => togglePublishUnpublish(!publish)}>
                             {selectBlog?.isPublished ? "UnPublish" : "Publish"}
                         </Button>
+
                         <Button variant="destructive" onClick={deleteBlog}>Remove</Button>
                         <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">
                             Publishing will make this blog visible on your website. Removing will delete it permanently.
                         </p>
 
-                    </div>
+                    </div> */}
                     <div className='pt-10'>
                         <Label className="mb-2">Title</Label>
                         <Input type="text" placeholder="Enter a title" name="title" value={blogData.title} onChange={handleChange} className="dark:border-gray-300" />
@@ -180,27 +182,27 @@ const UpdateBlog = () => {
                     </div>
                     <div>
                         <Label className="mb-2">Category</Label>
-                       <Select onValueChange={selectCategory} required>
-                        <SelectTrigger className="w-[200px]">
-                          <SelectValue placeholder="Select a Category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel>Tech Categories</SelectLabel>
-                            <SelectItem value="Web Development">Web Development</SelectItem>
-                            <SelectItem value="Mobile Development">Mobile Development</SelectItem>
-                            <SelectItem value="Programming Languages">Programming Languages</SelectItem>
-                            <SelectItem value="AI & Machine Learning">AI & Machine Learning</SelectItem>
-                            <SelectItem value="Cloud & DevOps">Cloud & DevOps</SelectItem>
-                            <SelectItem value="Databases">Databases</SelectItem>
-                            <SelectItem value="Cybersecurity">Cybersecurity</SelectItem>
-                            <SelectItem value="Tools & Productivity">Tools & Productivity</SelectItem>
-                            <SelectItem value="Tech News & Industry">Tech News & Industry</SelectItem>
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
+                        <Select onValueChange={selectCategory} required>
+                            <SelectTrigger className="w-[200px]">
+                                <SelectValue placeholder="Select a Category" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectLabel>Tech Categories</SelectLabel>
+                                    <SelectItem value="Web Development">Web Development</SelectItem>
+                                    <SelectItem value="Mobile Development">Mobile Development</SelectItem>
+                                    <SelectItem value="Programming Languages">Programming Languages</SelectItem>
+                                    <SelectItem value="AI & Machine Learning">AI & Machine Learning</SelectItem>
+                                    <SelectItem value="Cloud & DevOps">Cloud & DevOps</SelectItem>
+                                    <SelectItem value="Databases">Databases</SelectItem>
+                                    <SelectItem value="Cybersecurity">Cybersecurity</SelectItem>
+                                    <SelectItem value="Tools & Productivity">Tools & Productivity</SelectItem>
+                                    <SelectItem value="Tech News & Industry">Tech News & Industry</SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
                     </div>
-                    
+
                     <div>
                         <Label className="mb-2">Thumbnail</Label>
                         <Input
@@ -218,14 +220,42 @@ const UpdateBlog = () => {
                             />
                         )}
                     </div>
-                    <div className='flex gap-3'>
-                        <Button variant="outline" onClick={() => router.back()}>Back</Button>
-                        <Button onClick={updateBlogHandler}>
-                            {
-                                loading ? <> <Loader2 className="mr-2 w-4 h-4 animate-spin" />Please Wait</> : "Save"
-                            }
-                        </Button>
+                    {/* Info text */}
+                    <div className="mb-4 space-y-1">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                            Click <strong>Save</strong> to apply your changes before publishing.
+                        </p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                            Publishing will make this blog visible on your website. Removing will delete it permanently.
+                        </p>
                     </div>
+
+                    {/* Action buttons */}
+                    <div className="flex justify-between">
+                        {/* Left side */}
+                        <div className="flex gap-2">
+                            <Button variant="outline" onClick={() => router.back()}>Back</Button>
+                            <Button variant="destructive" onClick={deleteBlog}>Remove</Button>
+                        </div>
+
+                        {/* Right side */}
+                        <div className="flex gap-2">
+                            <Button onClick={() => togglePublishUnpublish(!publish)}>
+                                {publish ? "UnPublish" : "Publish"}
+                            </Button>
+                            <Button onClick={updateBlogHandler}>
+                                {loading ? (
+                                    <>
+                                        <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+                                        Please Wait
+                                    </>
+                                ) : "Save"}
+                            </Button>
+                        </div>
+                    </div>
+
+
+
 
                 </Card>
             </div>

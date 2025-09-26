@@ -9,7 +9,7 @@ function BlogCardListButton({ blog }) {
 
     return (
         <>
-            <p key={blog._id}className="relative inline-block text-[#333333] cursor-pointer hover:text-blue-800  after:content-['→'] after:ml-2" onClick={() => router.push(`/blog/${blog._id}`)}>
+            <p key={blog?._id}className="relative inline-block text-[#333333] cursor-pointer hover:text-blue-800  after:content-['→'] after:ml-2" onClick={() => router.push(`/blog/${blog._id}`)}>
                 Read More
             </p>
         </>

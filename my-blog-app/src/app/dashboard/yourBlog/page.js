@@ -30,6 +30,7 @@ export default function YourBlog() {
     const router = useRouter()
     const dispatch = useDispatch()
     const { userBlog } = useSelector(store => store.blog)
+    const {blog} = useSelector(store => store.blog)
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 
@@ -40,7 +41,7 @@ export default function YourBlog() {
                 dispatch(setUserBlog(res.data.blogs))
             }
             console.log("blog data", res.data.blogs)
-            console.log(" after fetch api redux store", blog);
+            console.log(" after fetch api redux store", userBlog);
 
         } catch (error) {
             console.log(error);
@@ -52,7 +53,9 @@ export default function YourBlog() {
             const res = await axios.delete(`${apiUrl}/api/v1/blog/delete/${id}`, { withCredentials: true })
             if (res.data.success) {
                 const updatedBlogData = blog.filter((blogItem) => blogItem?._id !== id);
+                const updatedUserBlogData = userBlog.filter((blogItem) => blogItem?._id !== id);
                 dispatch(setBlog(updatedBlogData))
+                dispatch(setUserBlog(updatedUserBlogData))
                 toast.success(res.data.message)
             }
             console.log(res.data.message);
@@ -65,7 +68,7 @@ export default function YourBlog() {
     }
     useEffect(() => {
         getOwnBlog()
-    })
+    },[])
 
 
     const formatDate = (index) => {

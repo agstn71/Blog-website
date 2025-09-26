@@ -18,7 +18,7 @@ const SearchList = () => {
         (b) =>
             b.title.toLowerCase().includes(query.toLowerCase()) ||
             b.subtitle.toLowerCase().includes(query.toLowerCase()) ||
-            b.category.toLowerCase() === query.toLowerCase()
+            b.category.toLowerCase() .includes(query.toLowerCase())
     );
 
     useEffect(() => {
